@@ -1,0 +1,59 @@
+[project]
+name = "otelize"
+version = "0.0.2"
+description = "A Python decorator to add OTEL auto-instrumentation to your functions"
+readme = "README.md"
+keywords = [ "telemetry", "OTEL", "auto-instrumentation", "decorator" ]
+requires-python = ">=3.10"
+authors = [
+    { name = "Diego J. Romero López", email = "diegojromerolopez@gmail.com" },
+]
+classifiers=[
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+    "opentelemetry-api>=1.36.0",
+]
+
+[project.urls]
+repository = "https://github.com/diegojromerolopez/otelize"
+documentation = "https://github.com/diegojromerolopez/otelize/blob/main/README.md"
+"Bug Tracker" = "https://github.com/diegojromerolopez/otelize/issues"
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "coverage>=7.9.2",
+    "flake8>=7.3.0",
+    "flake8-quotes>=3.4.0",
+    "isort>=6.0.1",
+    "mypy>=1.17.1",
+    "opentelemetry-sdk>=1.36.0",
+    "ruff>=0.12.11",
+]
+
+[tool.setuptools.packages.find]
+include = ["otelize*"]
+exclude = ["resources*"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+skip_string_normalization = true
+
+[tool.flake8]
+inline-quotes = "'"
+multiline-quotes = "'''"
+docstring-quotes = '"""'
+
+[tool.isort]
+profile = "black"
+
