@@ -1,6 +1,6 @@
 [project]
 name = "otelize"
-version = "0.0.2"
+version = "0.1.0"
 description = "A Python decorator to add OTEL auto-instrumentation to your functions"
 readme = "README.md"
 keywords = [ "telemetry", "OTEL", "auto-instrumentation", "decorator" ]
