@@ -1,6 +1,6 @@
 [project]
 name = "otelize"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python decorator to add OTEL auto-instrumentation to your functions"
 readme = "README.md"
 keywords = [ "telemetry", "OTEL", "auto-instrumentation", "decorator" ]
@@ -25,7 +25,7 @@ dependencies = [
 
 [project.urls]
 repository = "https://github.com/diegojromerolopez/otelize"
-documentation = "https://github.com/diegojromerolopez/otelize/blob/main/README.md"
+documentation = "https://otelize.readthedocs.io/en/latest/"
 "Bug Tracker" = "https://github.com/diegojromerolopez/otelize/issues"
 
 [dependency-groups]

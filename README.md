@@ -23,6 +23,8 @@ the returning value as span attributes.
 
 ## How to use it
 
+See the [official documentation in readthedocs.io](https://otelize.readthedocs.io/en/latest/).
+
 ### The otelize decorator
 
 This package provides an `@otelize` decorator for applying it on functions and classes.
