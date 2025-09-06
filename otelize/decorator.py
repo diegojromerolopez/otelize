@@ -1,61 +1,70 @@
-import json
 import re
+from collections.abc import Callable
 from functools import wraps
-from typing import Any
+from types import FunctionType
+from typing import Literal
 
-from opentelemetry.trace import Span
-
-from otelize.flags import Flags
+from otelize.span_filler import SpanFiller
 from otelize.tracer import get_otel_tracer
 
-_REDACTABLE_ARGUMENT_REGEX = re.compile('.*(token|secret|password).*', re.IGNORECASE)
+_DUNDER_METHOD_REGEX = re.compile(r'^__\w+__$')
+
+_FuncType = Literal['function', 'instance_method', 'static_method', 'class_method']
 
 
-def otelize(func):
+def otelize(obj):
+    if isinstance(obj, FunctionType):
+        return __otelize_function(func=obj)
+
+    if isinstance(obj, type):
+        for name, member in vars(obj).items():
+            if __instance_method(member, name):
+                setattr(obj, name, __otelize_function(func=member, func_type='instance_method'))
+            elif __class_method(member):
+                func = member.__func__
+                setattr(obj, name, classmethod(__otelize_function(func=func, func_type='class_method')))
+            elif __static_method(member):
+                func = member.__func__
+                setattr(obj, name, staticmethod(__otelize_function(func=func, func_type='static_method')))
+        return obj
+
+    raise TypeError(f'@otelize not supported on {type(obj)}')
+
+
+def __instance_method(member, name):
+    return isinstance(member, FunctionType) and (not _DUNDER_METHOD_REGEX.match(name))
+
+
+def __class_method(member):
+    return isinstance(member, classmethod)
+
+
+def __static_method(member):
+    return isinstance(member, staticmethod)
+
+
+def __otelize_function(func: Callable, func_type: _FuncType = 'function') -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs):
         tracer = get_otel_tracer()
         with tracer.start_as_current_span(func.__qualname__) as span:
-            __set_args_to_span_attributes(func_args=args, span=span)
-            __set_kwargs_to_span_attributes(func_kwargs=kwargs, span=span)
+            # If it is a class method (instance, class or static), ignore the implicit parameter
+            if func_type.endswith('_method'):
+                args_for_span = args[1:]
+            else:
+                args_for_span = args
+
             return_value = func(*args, **kwargs)
-            __set_return_value_to_span_attributes(return_value=return_value, span=span)
+
+            span_filler = SpanFiller(
+                func_type=func_type,
+                span=span,
+                func_args=args_for_span,
+                func_kwargs=kwargs,
+                return_value=return_value,
+            )
+            span_filler.run()
+
             return return_value
 
     return wrapper
-
-
-def __set_args_to_span_attributes(func_args: tuple[Any, ...], span: Span) -> None:
-    for arg_index, arg in enumerate(func_args):
-        attr_name = f'arg.{arg_index}.value'
-        span.set_attribute(attr_name, __value_as_span_attribute(attr=attr_name, value=arg))
-
-
-def __set_kwargs_to_span_attributes(func_kwargs: dict[str, Any], span: Span) -> None:
-    for key, value in func_kwargs.items():
-        span.set_attribute(f'{key}.value', __value_as_span_attribute(attr=key, value=value))
-
-
-def __value_as_span_attribute(attr: str, value: Any) -> str | int | float | bool:
-    if attr in Flags.otelize_span_redactable_attributes() or Flags.otelize_span_redactable_attribute_regex().match(
-        attr
-    ):
-        return '[REDACTED]'
-
-    if isinstance(value, (str, int, float, bool)):
-        return value
-
-    if isinstance(value, (list, tuple, set)):
-        return json.dumps(value)
-
-    if isinstance(value, dict):
-        redacted_dict = {k: __value_as_span_attribute(attr=k, value=v) for k, v in value.items()}
-        return json.dumps(redacted_dict)
-
-    return str(value)
-
-
-def __set_return_value_to_span_attributes(return_value: Any, span: Span) -> None:
-    if not Flags.otelize_span_return_value_is_included():
-        return
-    span.set_attribute('return.value', __value_as_span_attribute(attr='return_value', value=return_value))

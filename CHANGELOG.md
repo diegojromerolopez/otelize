@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.1.0 (2025-09-05)
+### Features
+ - `@otelize` now works at class-level, decorating all non-magical methods (including class methods and static methods).
+
+## 0.0.2 (2025-08-30)
+First release of the package.
+
 ## 0.0.1 (2025-08-30)
 ### Features
 - `@otelize` function decorator that adds automatic OTEL instrumentation to a function.
