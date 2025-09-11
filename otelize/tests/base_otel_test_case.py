@@ -17,10 +17,14 @@ class BaseOtelTestCase(TestCase):
         self.tracer_provider.add_span_processor(span_processor)
         self.test_tracer = self.tracer_provider.get_tracer('test')
 
-        tracer_patcher = patch('otelize.decorator.get_otel_tracer')
-        self.mock_get_tracer = tracer_patcher.start()
+        tracer_patcher = patch(self._get_otel_tracer_module_path())
+        mock_get_tracer = tracer_patcher.start()
         self.addCleanup(tracer_patcher.stop)
-        self.mock_get_tracer.return_value = self.test_tracer
+        mock_get_tracer.return_value = self.test_tracer
+
+    @staticmethod
+    def _get_otel_tracer_module_path() -> str:
+        raise NotImplementedError('Implement this method in a subclass')  # pragma: no cover
 
     def tearDown(self) -> None:
         super().tearDown()

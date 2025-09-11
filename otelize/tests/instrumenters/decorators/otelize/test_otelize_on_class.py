@@ -1,8 +1,12 @@
-from otelize.tests.base_otel_test_case import BaseOtelTestCase
-from otelize.tests.decorator.dummy_calculator import DummyCalculator
+from otelize.tests.instrumenters.decorators.otelize.base_otelize_test_case import (
+    BaseOtelizeTestCase,
+)
+from otelize.tests.instrumenters.decorators.otelize.dummy_calculator import (
+    DummyCalculator,
+)
 
 
-class TestDecoratorOnClass(BaseOtelTestCase):
+class TestOtelizeOnClass(BaseOtelizeTestCase):
     def test_magic_method(self) -> None:
         calculator = DummyCalculator(initial_value=1)
 

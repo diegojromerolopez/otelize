@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.2.0 (2025-09-11)
+### Features
+- New otelize_iterable that yields span, item for iterables.
+
+### Fixes
+- The project now follows the DDD approach.
+
 ## 0.1.1 (2025-09-06)
 ### Fixes
  - New official [documentation page](https://otelize.readthedocs.io/en/latest/) available.

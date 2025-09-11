@@ -4,11 +4,13 @@ from unittest.mock import patch
 
 from opentelemetry import trace
 
-from otelize.decorator import otelize
-from otelize.tests.base_otel_test_case import BaseOtelTestCase
+from otelize.instrumenters.decorators.otelize import otelize
+from otelize.tests.instrumenters.decorators.otelize.base_otelize_test_case import (
+    BaseOtelizeTestCase,
+)
 
 
-class TestDecoratorOnFunction(BaseOtelTestCase):
+class TestOtelizeOnFunction(BaseOtelizeTestCase):
     @patch.dict(os.environ, {}, clear=True)
     def test_decorator_on_args(self) -> None:
         @otelize
@@ -21,7 +23,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_decorator_on_args.<locals>.add', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_decorator_on_args.<locals>.add', span.name)
         self.assertEqual(
             {
                 'function.call.arg.0.value': 1,
@@ -53,7 +55,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_decorator_on_kwargs.<locals>.interpolate', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_decorator_on_kwargs.<locals>.interpolate', span.name)
         self.assertEqual(
             {
                 'function.call.kwarg.string.value': _string,
@@ -76,7 +78,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_argument_needs_to_be_redacted.<locals>.get_token', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_argument_needs_to_be_redacted.<locals>.get_token', span.name)
         self.assertEqual(
             {
                 'function.call.kwarg.token_name.value': '[REDACTED]',
@@ -99,7 +101,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
 
         span = spans[0]
         self.assertEqual(
-            'TestDecoratorOnFunction.test_dict_argument_has_items_that_need_redacting.<locals>.do_something', span.name
+            'TestOtelizeOnFunction.test_dict_argument_has_items_that_need_redacting.<locals>.do_something', span.name
         )
         self.assertEqual(
             {
@@ -124,7 +126,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_add_span_event.<locals>.some_func', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_add_span_event.<locals>.some_func', span.name)
         self.assertEqual(1, len(span.events))
 
         span_event = span.events[0]
@@ -147,7 +149,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_return_value_is_not_included.<locals>.some_func', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_return_value_is_not_included.<locals>.some_func', span.name)
         self.assertEqual(
             {
                 'function.call.kwarg.param.value': 'some_param',
@@ -169,7 +171,7 @@ class TestDecoratorOnFunction(BaseOtelTestCase):
         self.assertEqual(1, len(spans))
 
         span = spans[0]
-        self.assertEqual('TestDecoratorOnFunction.test_use_span.<locals>.some_func', span.name)
+        self.assertEqual('TestOtelizeOnFunction.test_use_span.<locals>.some_func', span.name)
         self.assertEqual(
             {
                 'function.call.kwarg.param.value': 'some_param',
