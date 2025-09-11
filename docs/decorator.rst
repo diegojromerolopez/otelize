@@ -4,15 +4,12 @@ Usage
 Introduction
 ------------
 
-``otelize`` is a simple package for developers that want to add basic
-OpenTelemetry (OTEL) telemetry to their projects without adding much boilerplate.
-
-How it works
-------------
-
 This package provides the ``@otelize`` decorator that wraps a function or a class method
 in an OTEL span automatically. All arguments of that function will be added as span attributes
 (or included in a span event).
+
+Remember that the values are converted to make sure no sensible data is leaked, and that we serialize complex objects.
+`View OtelValueConverter <https://github.com/diegojromerolopez/otelize/blob/main/otelize/adapters/otel_value_converter.py>`_.
 
 The otelize decorator
 ---------------------
