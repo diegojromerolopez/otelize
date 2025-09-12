@@ -4,8 +4,8 @@ from functools import wraps
 from types import FunctionType
 from typing import Literal
 
-from otelize.span_filler import SpanFiller
-from otelize.tracer import get_otel_tracer
+from otelize.infra.tracer import get_otel_tracer
+from otelize.instrumenters.decorators.span_filler import SpanFiller
 
 _DUNDER_METHOD_REGEX = re.compile(r'^__\w+__$')
 

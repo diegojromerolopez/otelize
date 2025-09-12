@@ -125,6 +125,41 @@ The arguments will be added in the same way that they were being added to functi
 
 There is a limitation, that is that the dunder methods (e.g. `__method__`) are ignored.
 
+### The otelize_iterable wrapper
+
+#### otelize_iterable on iterables
+
+Just wrap your loopable data structure with the otelize_iterable wrapper to get a generator that yields a span
+and the item.
+
+```python
+from otelize import otelize_iterable
+
+for span, item in otelize_iterable([1, 2, 3]):
+    pass
+    # span.set_attributes({ your other attributes })
+```
+
+#### otelize_iterable on generators
+
+Just wrap your iterable with the otelize_iterable wrapper to get a generator that yields a span and the item.
+
+```python
+from collections.abc import Generator
+from otelize import otelize_iterable
+
+
+def dummy_generator() -> Generator[str, None, None]:
+    yield 'first'
+    yield 'second'
+    yield 'third'
+
+
+for span, item in otelize_iterable(dummy_generator()):
+    pass
+    # span.set_attributes({ your other attributes })
+```
+
 ### Configuration
 
 The following configuration settings can be set via environment variables:

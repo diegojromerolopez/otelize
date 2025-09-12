@@ -2,7 +2,7 @@ import os
 from unittest import TestCase
 from unittest.mock import patch
 
-from otelize.config import Config
+from otelize.infra.config import Config
 
 
 class TestConfig(TestCase):

@@ -7,7 +7,8 @@ Add OTEL auto-instrumentation to your functions.
    :maxdepth: 2
    :caption: Contents:
 
-   usage
+   decorator
+   iterator_wrapper
    configuration
    examples
    advanced
