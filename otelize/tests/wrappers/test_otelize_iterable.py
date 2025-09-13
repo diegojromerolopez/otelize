@@ -1,12 +1,14 @@
 from collections.abc import Generator
 
 from otelize.instrumenters.wrappers.otelize_iterable import otelize_iterable
-from otelize.tests.wrappers.base_otelize_iterable_test_case import (
-    BaseOtelizeIterableTestCase,
-)
+from otelize.tests.base_otel_test_case import BaseOtelTestCase
 
 
-class TestOtelizeOnClass(BaseOtelizeIterableTestCase):
+class TestOtelizeIterable(BaseOtelTestCase):
+    @staticmethod
+    def _get_otel_tracer_module_path() -> str:
+        return 'otelize.instrumenters.wrappers.otelize_iterable.get_otel_tracer'
+
     def test_on_list(self) -> None:
         a_list = ['first', 'second', 'third']
         for span, item in otelize_iterable(a_list):
