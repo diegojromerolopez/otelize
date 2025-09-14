@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Features
 - Add parameters to positional-only arguments.
 
+### Fixes
+- Refactor otelize.py and simplify code for otelize decorator.
+
 ## 0.3.0 (2025-09-14)
 ### Features
 - New otelize_context_manager that returns span, and original the context manager result.
