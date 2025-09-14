@@ -22,4 +22,7 @@ class OtelValueConverter:
         if isinstance(value, dict):
             return json.dumps({k: self.to_value(v, attr=k) for k, v in value.items()})
 
+        if hasattr(value, 'name'):
+            return getattr(value, 'name')
+
         return str(value)

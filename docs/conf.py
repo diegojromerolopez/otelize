@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = "otelize"
 author = "Diego J. Romero Lopez"
-release = "0.2.0"
+release = "0.3.0"
 
 extensions = [
     "myst_parser",

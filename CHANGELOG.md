@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0 (2025-09-14)
+### Features
+- New otelize_context_manager that returns span, and original the context manager result.
+
 ## 0.2.0 (2025-09-11)
 ### Features
 - New otelize_iterable that yields span, item for iterables.

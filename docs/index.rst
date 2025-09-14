@@ -8,6 +8,7 @@ Add OTEL auto-instrumentation to your functions.
    :caption: Contents:
 
    decorator
+   context_manager_wrapper
    iterator_wrapper
    configuration
    examples
