@@ -48,9 +48,11 @@ def __otelize_function(func: Callable, func_type: _FuncType = 'function') -> Cal
     def wrapper(*args, **kwargs):
         tracer = get_otel_tracer()
         with tracer.start_as_current_span(func.__qualname__) as span:
+            func_parameters = func.__code__.co_varnames
             # If it is a class method (instance, class or static), ignore the implicit parameter
             if func_type.endswith('_method'):
                 args_for_span = args[1:]
+                func_parameters = func_parameters[1:]
             else:
                 args_for_span = args
 
@@ -59,6 +61,7 @@ def __otelize_function(func: Callable, func_type: _FuncType = 'function') -> Cal
             span_filler = SpanFiller(
                 func_type=func_type,
                 span=span,
+                parameters=func_parameters,
                 func_args=args_for_span,
                 func_kwargs=kwargs,
                 return_value=return_value,

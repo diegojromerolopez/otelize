@@ -61,10 +61,10 @@ tracer = trace.get_tracer(__name__)
 def your_function(a_param: str, another_param: int, a_list: list[float], a_dict: dict[str, str]):
     with tracer.start_as_current_span('your_function') as span:
         span.set_attributes({
-            'function.call.arg.0.a_param': a_param,
-            'function.call.arg.1.another_param': another_param,
-            'function.call.arg.1.a_list': json.dumps(a_list),
-            'function.call.arg.1.a_dict': json.dumps(a_dict),
+            'function.call.arg.0.value': a_param,
+            'function.call.arg.1.value': another_param,
+            'function.call.arg.2.value': json.dumps(a_list),
+            'function.call.arg.3.value': json.dumps(a_dict),
         })
 ```
 

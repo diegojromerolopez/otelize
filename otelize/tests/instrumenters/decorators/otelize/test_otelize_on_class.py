@@ -26,14 +26,18 @@ class TestOtelizeOnClass(BaseOtelizeTestCase):
         span0 = spans[0]
         self.assertEqual('DummyCalculator.add', span0.name)
         self.assertEqual(
-            {'function.call.arg.0.value': 3, 'function.call.return.value': 4, 'function.type': 'instance_method'},
+            {
+                'function.call.arg.other.value': 3,
+                'function.call.return.value': 4,
+                'function.type': 'instance_method',
+            },
             dict(span0.attributes or {}),
         )
 
         span1 = spans[1]
         self.assertEqual('DummyCalculator.subtract', span1.name)
         self.assertEqual(
-            {'function.call.arg.0.value': 2, 'function.call.return.value': 2, 'function.type': 'instance_method'},
+            {'function.call.arg.other.value': 2, 'function.call.return.value': 2, 'function.type': 'instance_method'},
             dict(span1.attributes or {}),
         )
 
@@ -67,7 +71,11 @@ class TestOtelizeOnClass(BaseOtelizeTestCase):
         span0 = spans[0]
         self.assertEqual('DummyCalculator.set_floating_point_character', span0.name)
         self.assertEqual(
-            {'function.call.arg.0.value': ',', 'function.call.return.value': 'None', 'function.type': 'class_method'},
+            {
+                'function.call.arg.character.value': ',',
+                'function.call.return.value': 'None',
+                'function.type': 'class_method',
+            },
             dict(span0.attributes or {}),
         )
 

@@ -27,7 +27,8 @@ Just add the decorator to your functions:
     def your_function(a_param: str, another_param: int, a_list: list[float], a_dict: dict[str, str]):
         ...
 
-All the parameters and the return value will be added as attributes to the OTEL span created.
+All the parameters and the return value will be added as attributes to the OTEL span created
+(with an arg or kwarg prefix depending on how it was called).
 
 Classes
 ~~~~~~~

@@ -26,8 +26,8 @@ class TestOtelizeOnFunction(BaseOtelizeTestCase):
         self.assertEqual('TestOtelizeOnFunction.test_decorator_on_args.<locals>.add', span.name)
         self.assertEqual(
             {
-                'function.call.arg.0.value': 1,
-                'function.call.arg.1.value': 2,
+                'function.call.arg.a.value': 1,
+                'function.call.arg.b.value': 2,
                 'function.call.return.value': return_value,
                 'function.type': 'function',
             },
