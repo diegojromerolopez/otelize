@@ -3,6 +3,7 @@ import os
 from unittest.mock import patch
 
 from opentelemetry import trace
+from opentelemetry.trace.status import StatusCode
 
 from otelize.instrumenters.decorators.otelize import otelize
 from otelize.tests.instrumenters.decorators.otelize.base_otelize_test_case import (
@@ -26,8 +27,8 @@ class TestOtelizeOnFunction(BaseOtelizeTestCase):
         self.assertEqual('TestOtelizeOnFunction.test_decorator_on_args.<locals>.add', span.name)
         self.assertEqual(
             {
-                'function.call.arg.0.value': 1,
-                'function.call.arg.1.value': 2,
+                'function.call.arg.a.value': 1,
+                'function.call.arg.b.value': 2,
                 'function.call.return.value': return_value,
                 'function.type': 'function',
             },
@@ -114,6 +115,25 @@ class TestOtelizeOnFunction(BaseOtelizeTestCase):
             dict(span.attributes or {}),
         )
 
+    @patch.dict(os.environ, {}, clear=True)
+    def test_decorated_function_raises_an_exception(self) -> None:
+        @otelize
+        def func(a: int, b: int) -> None:
+            raise NotImplementedError('This method should not be called')
+
+        with self.assertRaises(NotImplementedError) as context:
+            func(1, 2)
+
+        self.assertEqual('This method should not be called', str(context.exception))
+
+        spans = self.span_exporter.get_finished_spans()
+        self.assertEqual(1, len(spans))
+
+        span = spans[0]
+        self.assertEqual('TestOtelizeOnFunction.test_decorated_function_raises_an_exception.<locals>.func', span.name)
+        self.assertEqual(StatusCode.ERROR, span.status.status_code)
+        self.assertEqual({}, dict(span.attributes or {}))
+
     @patch.dict(os.environ, {'OTELIZE_USE_EVENT_ATTRIBUTES': 'true'}, clear=True)
     def test_add_span_event(self) -> None:
         @otelize
@@ -179,6 +199,75 @@ class TestOtelizeOnFunction(BaseOtelizeTestCase):
                 'another_value': 'another_value',
                 'function.call.return.value': 'some_param',
                 'function.type': 'function',
+            },
+            dict(span.attributes or {}),
+        )
+
+    def test_decorate_instance_method(self) -> None:
+        class Dummy:
+            @otelize
+            def some_func(self, param: str) -> None:
+                pass
+
+        dummy = Dummy()
+        dummy.some_func(param='some_param')
+
+        spans = self.span_exporter.get_finished_spans()
+        self.assertEqual(1, len(spans))
+
+        span = spans[0]
+        self.assertEqual('TestOtelizeOnFunction.test_decorate_instance_method.<locals>.Dummy.some_func', span.name)
+        self.assertEqual(
+            {
+                'function.call.kwarg.param.value': 'some_param',
+                'function.call.return.value': 'None',
+                'function.type': 'instance_method',
+            },
+            dict(span.attributes or {}),
+        )
+
+    def test_decorate_static_method(self) -> None:
+        class Dummy:
+            @otelize
+            @staticmethod
+            def some_func(param: str) -> None:
+                pass
+
+        Dummy.some_func(param='some_param')
+
+        spans = self.span_exporter.get_finished_spans()
+        self.assertEqual(1, len(spans))
+
+        span = spans[0]
+        self.assertEqual('TestOtelizeOnFunction.test_decorate_static_method.<locals>.Dummy.some_func', span.name)
+        self.assertEqual(
+            {
+                'function.call.kwarg.param.value': 'some_param',
+                'function.call.return.value': 'None',
+                'function.type': 'static_method',
+            },
+            dict(span.attributes or {}),
+        )
+
+    def test_decorate_class_method(self) -> None:
+        class Dummy:
+            @otelize
+            @classmethod
+            def some_func(cls, param: str) -> None:
+                pass
+
+        Dummy.some_func(param='some_param')
+
+        spans = self.span_exporter.get_finished_spans()
+        self.assertEqual(1, len(spans))
+
+        span = spans[0]
+        self.assertEqual('TestOtelizeOnFunction.test_decorate_class_method.<locals>.Dummy.some_func', span.name)
+        self.assertEqual(
+            {
+                'function.call.kwarg.param.value': 'some_param',
+                'function.call.return.value': 'None',
+                'function.type': 'class_method',
             },
             dict(span.attributes or {}),
         )

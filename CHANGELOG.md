@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 (2025-09-15)
+### Features
+- Add parameters to positional-only arguments.
+
+### Fixes
+- Refactor otelize.py and simplify code for otelize decorator.
+- Minor improvements in the README.md.
+- Add test to make it clear we are not dealing with exceptions here, we rely on the behavior from the OpenTelemetry library.
+
 ## 0.3.0 (2025-09-14)
 ### Features
 - New otelize_context_manager that returns span, and original the context manager result.

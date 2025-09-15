@@ -13,6 +13,7 @@ class SpanFiller:
         self,
         func_type: _FuncType,
         span: Span,
+        parameters: tuple[str],
         func_args: tuple[Any, ...],
         func_kwargs: dict[str, Any],
         return_value: Any,
@@ -20,6 +21,7 @@ class SpanFiller:
         self.__func_type = func_type
         self.__config = Config.get()
         self.__span = span
+        self.__parameters = parameters
         self.__func_args = func_args
         self.__func_kwargs = func_kwargs
         self.__return_value = return_value
@@ -35,8 +37,9 @@ class SpanFiller:
         self.__span.set_attributes({'function.type': self.__func_type})
 
         for arg_index, arg in enumerate(self.__func_args):
-            attr_name = f'function.call.arg.{arg_index}.value'
-            self.__span.set_attribute(attr_name, self.__otel_value_converter.to_value(value=arg))
+            parameter = self.__parameters[arg_index]
+            attr_name = f'function.call.arg.{parameter}.value'
+            self.__span.set_attribute(attr_name, self.__otel_value_converter.to_value(attr=parameter, value=arg))
 
         for key, value in self.__func_kwargs.items():
             self.__span.set_attribute(
