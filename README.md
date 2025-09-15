@@ -160,6 +160,24 @@ for span, item in otelize_iterable(dummy_generator()):
     # span.set_attributes({ your other attributes })
 ```
 
+### The otelize_context_manager wrapper
+Wrap a context manager with `otelize_context_manager` and you will get a span that you can use inside the inner code.
+e.g.:
+
+```python
+import os
+import tempfile
+
+with otelize_context_manager(tempfile.NamedTemporaryFile()) as (temp_file_span, temp_file):
+    temp_file.write(b'hello')
+    # more writing ...
+    temp_file.flush()
+
+    temp_file_span.set_attributes({
+        'temp_file.size': os.path.getsize(temp_file.name)
+    })
+```
+
 ### Configuration
 
 The following configuration settings can be set via environment variables:
@@ -180,9 +198,7 @@ For example:
 This call
 
 ```python
-
 your_function('a_param', 'another_param', a_list=[1, 2, 3], a_dict={'a': 'a'})
-
 ```
 
 would be equal to this code:

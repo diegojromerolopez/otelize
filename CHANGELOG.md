@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixes
 - Refactor otelize.py and simplify code for otelize decorator.
+- Minor improvements in the README.md.
 
 ## 0.3.0 (2025-09-14)
 ### Features
