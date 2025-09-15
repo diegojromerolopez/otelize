@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixes
 - Refactor otelize.py and simplify code for otelize decorator.
 - Minor improvements in the README.md.
+- Add test to make it clear we are not dealing with exceptions here, we rely on the behavior from the OpenTelemetry library.
 
 ## 0.3.0 (2025-09-14)
 ### Features

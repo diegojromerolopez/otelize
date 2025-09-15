@@ -3,6 +3,7 @@ import os
 from unittest.mock import patch
 
 from opentelemetry import trace
+from opentelemetry.trace.status import StatusCode
 
 from otelize.instrumenters.decorators.otelize import otelize
 from otelize.tests.instrumenters.decorators.otelize.base_otelize_test_case import (
@@ -113,6 +114,25 @@ class TestOtelizeOnFunction(BaseOtelizeTestCase):
             },
             dict(span.attributes or {}),
         )
+
+    @patch.dict(os.environ, {}, clear=True)
+    def test_decorated_function_raises_an_exception(self) -> None:
+        @otelize
+        def func(a: int, b: int) -> None:
+            raise NotImplementedError('This method should not be called')
+
+        with self.assertRaises(NotImplementedError) as context:
+            func(1, 2)
+
+        self.assertEqual('This method should not be called', str(context.exception))
+
+        spans = self.span_exporter.get_finished_spans()
+        self.assertEqual(1, len(spans))
+
+        span = spans[0]
+        self.assertEqual('TestOtelizeOnFunction.test_decorated_function_raises_an_exception.<locals>.func', span.name)
+        self.assertEqual(StatusCode.ERROR, span.status.status_code)
+        self.assertEqual({}, dict(span.attributes or {}))
 
     @patch.dict(os.environ, {'OTELIZE_USE_EVENT_ATTRIBUTES': 'true'}, clear=True)
     def test_add_span_event(self) -> None:
