@@ -1,6 +1,6 @@
 [project]
 name = "otelize"
-version = "0.4.0"
+version = "0.4.1"
 description = "A Python decorator to add OTEL auto-instrumentation to your functions"
 readme = "README.md"
 keywords = [ "telemetry", "OTEL", "auto-instrumentation", "decorator" ]
@@ -15,6 +15,7 @@ classifiers=[
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries",
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License"
